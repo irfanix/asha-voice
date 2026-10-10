@@ -4,7 +4,8 @@
 // Small bar at the top of every screen that shows:
 //   - whether the device is online or offline
 //   - how many AI tasks are queued waiting for internet
-//   - a small "Names removed before AI" privacy badge
+//   - the ASHA worker's name (top right), with a small lock icon that
+//     explains names are removed before the AI reads the visit
 //
 // It also listens to the browser's 'online' event and automatically
 // drains the offline queue when the connection returns.
@@ -13,12 +14,30 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { drainQueue, queueSize } from '../ai/client';
+import { getSettings } from '../db';
 
 export default function OfflineBadge() {
   const { t } = useTranslation();
   const [online, setOnline] = useState<boolean>(navigator.onLine);
   const [queued, setQueued] = useState<number>(0);
   const [syncing, setSyncing] = useState<boolean>(false);
+  const [ashaName, setAshaName] = useState<string>('');
+
+  // Show the ASHA's own name in the top right corner. Re-read on focus
+  // so a name changed in Settings appears straight away.
+  useEffect(() => {
+    const read = () =>
+      void getSettings()
+        .then((s) => setAshaName(s?.asha_name?.trim() || ''))
+        .catch(() => {});
+    read();
+    window.addEventListener('focus', read);
+    window.addEventListener('asha-settings-changed', read);
+    return () => {
+      window.removeEventListener('focus', read);
+      window.removeEventListener('asha-settings-changed', read);
+    };
+  }, []);
 
   // Keep the queue count fresh — poll every 5 seconds and also
   // whenever the window regains focus (users often background the
@@ -91,9 +110,12 @@ export default function OfflineBadge() {
         <span />
       )}
 
-      {/* Right: privacy badge */}
-      <span className="text-gray-500" title={t('settings_privacy_body')}>
-        🔒 {t('privacy_badge')}
+      {/* Right: ASHA's name + privacy lock */}
+      <span className="flex items-center gap-1 min-w-0 text-gray-700 font-medium">
+        <span title={t('privacy_badge')} aria-label={t('privacy_badge')}>
+          🔒
+        </span>
+        <span className="truncate max-w-[160px]">👤 {ashaName || 'ASHA'}</span>
       </span>
     </div>
   );

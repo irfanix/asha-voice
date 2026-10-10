@@ -15,12 +15,13 @@
 //   ?action=<action>    pre-selects the visit type from the plan
 // ------------------------------------------------------------------
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-import MicButton from '../components/MicButton';
-import { all, uid, put, type Person } from '../db';
+import MicButton, { type MicErrorReason, type MicStatus } from '../components/MicButton';
+import PersonForm from '../components/PersonForm';
+import { all, put, type Person } from '../db';
 import { extractVisit } from '../ai/client';
 import { DEMO_TRANSCRIPTS } from '../demo/demoTranscripts';
 import { SPEECH_LOCALE, type AppLanguage } from '../i18n';
@@ -76,41 +77,38 @@ export default function RecordVisit() {
   );
 
   // -------------------- Speech --------------------
-  // The Web Speech API sometimes emits interim results that replace
-  // previous text. We accumulate final chunks and ignore anything
-  // that looks like a repeat of the current tail.
-  const handleTranscript = (chunk: string, final: boolean) => {
-    setTranscript((prev) => {
-      if (final) return (prev ? prev + ' ' : '') + chunk.trim();
-      // For interim, replace the last "interim tail" that we appended.
-      const interimMarker = '\u0001';
-      const cleaned = prev.split(interimMarker)[0];
-      return `${cleaned}${cleaned ? ' ' : ''}${chunk.trim()}${interimMarker}`;
-    });
+  // MicButton sends the full text heard since the mic was switched on.
+  // We keep whatever was already in the box (typed or spoken earlier)
+  // and put the new speech after it, so nothing is duplicated or lost.
+  const baseRef = useRef('');
+  const [listening, setListening] = useState(false);
+  const [micStatus, setMicStatus] = useState<MicStatus>('idle');
+  const handleMicStart = () => {
+    baseRef.current = transcript.trim();
+  };
+  const handleTranscript = (heard: string) => {
+    const base = baseRef.current;
+    setTranscript(base && heard ? `${base} ${heard}` : base || heard);
   };
 
-  // Remove the interim marker before showing the transcript.
-  const cleanTranscript = transcript.replace(/\u0001/g, '').trim();
+  const cleanTranscript = transcript.trim();
 
-  const handleMicError = (reason: 'unsupported' | 'denied' | 'other') => {
+  const handleMicError = (reason: MicErrorReason) => {
+    setMicNote(null);
+    if (reason === 'cleared') return;
     if (reason === 'unsupported') setMicNote('Microphone not supported on this browser. Please type or pick a demo transcript.');
     else if (reason === 'denied') setMicNote('Microphone permission denied. Please type or pick a demo transcript.');
+    else if (reason === 'network') setMicNote('Voice needs internet (the browser sends audio to Google to turn it into text). Please type, or try again when online.');
+    else if (reason === 'ai_failed') setMicNote(t('voice_ai_failed'));
+    else if (reason === 'language') setMicNote('This browser cannot listen in this language. Use Google Chrome on an Android phone, or type instead.');
     else setMicNote('Microphone error. You can type or pick a demo transcript.');
   };
 
-  // -------------------- Add new person quickly --------------------
-  const addNewPerson = async (name: string) => {
-    const id = uid();
-    const newP: Person = {
-      id,
-      household_id: 'H_' + id.slice(0, 6),
-      name: name.trim() || 'Unnamed',
-      sex: 'F',
-      category: visitType === 'anc' ? 'pregnant' : visitType === 'newborn' ? 'newborn' : visitType === 'child' ? 'child' : 'other',
-    };
+  // -------------------- Add new person --------------------
+  const addNewPerson = async (newP: Person) => {
     await put('persons', newP);
     setPersons((prev) => [...prev, newP].sort((a, b) => a.name.localeCompare(b.name)));
-    setPersonId(id);
+    setPersonId(newP.id);
     setShowNewPerson(false);
   };
 
@@ -215,7 +213,21 @@ export default function RecordVisit() {
         </button>
 
         {showNewPerson && (
-          <NewPersonForm onSubmit={addNewPerson} onCancel={() => setShowNewPerson(false)} />
+          <PersonForm
+            defaultCategory={
+              visitType === 'anc'
+                ? 'pregnant'
+                : visitType === 'postnatal'
+                  ? 'mother'
+                  : visitType === 'newborn'
+                    ? 'newborn'
+                    : visitType === 'child'
+                      ? 'child'
+                      : 'other'
+            }
+            onSave={addNewPerson}
+            onCancel={() => setShowNewPerson(false)}
+          />
         )}
       </section>
 
@@ -262,16 +274,23 @@ export default function RecordVisit() {
           <MicButton
             lang={speechLocale}
             onTranscript={handleTranscript}
+            onStart={handleMicStart}
+            onListeningChange={setListening}
             onError={handleMicError}
+            onStatus={setMicStatus}
             disabled={busy}
           />
 
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-gray-500 mb-1">
-              {t('live_transcript')}
+            <p className={`text-xs mb-1 ${listening || micStatus === 'transcribing' ? 'text-danger font-semibold' : 'text-gray-500'}`}>
+              {micStatus === 'transcribing'
+                ? '⏳ ' + t('voice_ai_note')
+                : listening
+                  ? '🔴 ' + t('voice_recording')
+                  : t('live_transcript')}
             </p>
             <textarea
-              value={cleanTranscript}
+              value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
               rows={6}
               placeholder={t('type_instead')}
@@ -290,11 +309,13 @@ export default function RecordVisit() {
           </div>
         </div>
 
+
         {micNote && (
           <p className="mt-3 text-xs text-watch bg-watch/10 rounded-xl p-2">
             ⚠️ {micNote}
           </p>
         )}
+        <p className="mt-3 text-[11px] text-gray-400">💡 {t('mic_tip')}</p>
       </section>
 
       {/* -------------------- Demo transcripts -------------------- */}
@@ -338,52 +359,6 @@ export default function RecordVisit() {
       <p className="text-center text-[11px] text-gray-400">
         {t('settings_notice')}
       </p>
-    </div>
-  );
-}
-
-// ------------------------------------------------------------------
-// Quick "add new person" form
-// ------------------------------------------------------------------
-function NewPersonForm({
-  onSubmit,
-  onCancel,
-}: {
-  onSubmit: (name: string) => void;
-  onCancel: () => void;
-}) {
-  const { t } = useTranslation();
-  const [name, setName] = useState('');
-
-  return (
-    <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-200">
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-        autoFocus
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
-                   focus:border-primary focus:outline-none"
-      />
-      <div className="flex gap-2 mt-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="flex-1 py-2 rounded-lg border border-gray-300 text-sm"
-        >
-          {t('common_cancel')}
-        </button>
-        <button
-          type="button"
-          onClick={() => onSubmit(name)}
-          disabled={!name.trim()}
-          className="flex-1 py-2 rounded-lg bg-primary text-white text-sm
-                     disabled:opacity-50"
-        >
-          {t('common_save')}
-        </button>
-      </div>
     </div>
   );
 }

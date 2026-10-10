@@ -31,6 +31,11 @@ export type Person = {
   delivery_date?: string; // ISO
   birth_weight_g?: number;
   phone?: string;
+  address?: string;
+  // Obstetric history for pregnant women (G = gravida, P = para, A = abortus)
+  gravida?: number;
+  para?: number;
+  abortus?: number;
 };
 
 export type Visit = {
@@ -152,6 +157,11 @@ export async function clearStore(store: string): Promise<void> {
 export async function saveSettings(s: Settings): Promise<void> {
   const d = await db();
   await d.put('settings', { key: 'app', ...s });
+  try {
+    window.dispatchEvent(new Event('asha-settings-changed'));
+  } catch {
+    /* not in a browser (tests) */
+  }
 }
 
 export async function getSettings(): Promise<Settings | null> {

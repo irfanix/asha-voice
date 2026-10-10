@@ -16,9 +16,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import PersonForm, { ageInYears, gpaText } from '../components/PersonForm';
 import {
   all,
   get,
+  put,
   getSettings,
   type Person,
   type Visit,
@@ -43,6 +45,7 @@ export default function PersonDetail() {
   const [immunisations, setImmunisations] = useState<Immunisation[]>([]);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -264,6 +267,54 @@ export default function PersonDetail() {
         <h1 className="text-2xl font-bold text-gray-900">{header.title}</h1>
         <p className="text-sm text-gray-500 mt-0.5">{header.subtitle}</p>
       </header>
+
+      {/* Personal details */}
+      <section className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-bold text-gray-900">🪪 {t('details')}</h2>
+          <button
+            type="button"
+            onClick={() => setEditing((v) => !v)}
+            className="text-sm text-primary font-medium"
+          >
+            ✏️ {t('edit')}
+          </button>
+        </div>
+        {editing ? (
+          <PersonForm
+            initial={person}
+            onCancel={() => setEditing(false)}
+            onSave={async (np) => {
+              await put('persons', np);
+              setPerson(np);
+              setEditing(false);
+            }}
+          />
+        ) : (
+          <dl className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-1.5 text-sm">
+            {(
+              [
+                [t('pf_dob'), person.dob ? `${person.dob}${ageInYears(person.dob) != null ? ` (${ageInYears(person.dob)} ${t('years')})` : ''}` : ''],
+                [t('pf_phone'), person.phone ?? ''],
+                [t('pf_address'), person.address ?? ''],
+                [t('pf_gpa'), gpaText(person)],
+                [t('pf_lmp'), person.lmp ?? ''],
+                [t('pf_edd'), person.edd ?? ''],
+                [t('pf_delivery'), person.delivery_date ?? ''],
+              ] as [string, string][]
+            )
+              .filter(([, v]) => v)
+              .map(([k, v]) => (
+                <div key={k} className="contents">
+                  <dt className="text-gray-500">{k}</dt>
+                  <dd className="text-gray-900 font-medium break-words">
+                    {k === t('pf_phone') ? <a href={`tel:${v}`} className="text-primary underline">{v}</a> : v}
+                  </dd>
+                </div>
+              ))}
+          </dl>
+        )}
+      </section>
 
       {/* Primary actions */}
       <section className="grid grid-cols-2 gap-2">

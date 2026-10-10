@@ -4,6 +4,8 @@
 
 Built for **ForgeHacks Online 2026**, track: **AI + Healthcare**.
 
+**Live demo:** https://asha-voice-phi.vercel.app
+
 > ⚠️ **ASHA Voice is a prototype. It is not a medical device.** The AI never diagnoses and never prescribes. Danger signs come from a deterministic rule engine based on official Indian guidance. The ASHA always reviews and confirms before saving.
 
 ---
@@ -81,7 +83,7 @@ Language picker → name & village → 3-slide intro → **Start** or **Load dem
 ### Record a visit (the hero flow)
 1. Pick or add the person
 2. Pick the visit type (ANC / Postnatal / Newborn / Child / Other)
-3. Speak, type, or choose a **demo transcript**
+3. Speak, type, or choose a **demo transcript**. Voice is turned into text by **Whisper speech AI** (`/api/transcribe`), which is far more accurate for Telugu and Hindi than browser voice typing. If the AI voice is unavailable the app falls back to the phone's own speech recognition.
 4. Tap Review
 
 ### Review + Safety check
@@ -92,6 +94,7 @@ Language picker → name & village → 3-slide intro → **Start** or **Load dem
 - On save: family message is generated, spoken aloud and shareable via WhatsApp.
 
 ### People & Person detail
+- **Add person** form: full name, type, date of birth (age is calculated), phone, address, and for pregnant women LMP (EDD calculated) and obstetric history **G P A**. Details can be edited later on the person page.
 - Filter by: All · Pregnant · Newborns · Under 5 · Overdue
 - Per-person timeline of visits, alerts, referrals, immunisations.
 
@@ -104,6 +107,11 @@ Language picker → name & village → 3-slide intro → **Start** or **Load dem
 - Visits by type, red/amber counts, referrals completed, vaccines due vs given
 - Incentive tracker (example values, labelled as such)
 - **Export CSV** and **Print / PDF**
+
+### Supervisor view
+- One screen to check everyone recorded on the phone: RED / AMBER / overdue counts, a **Needs action** list (red alerts, open referrals, overdue routine visits) and the full register with DOB, age, phone, address, G P A and last visit.
+- **Remind** opens WhatsApp with a ready reminder for that family.
+- **Export all data (CSV)** and **Share summary on WhatsApp** for the ANM / supervisor.
 
 ### Settings
 - Language, voice speed, demo mode, data export/backup, delete all data, privacy notice.
@@ -167,6 +175,7 @@ When the ASHA is offline (or the network drops), the visit is read on the phone 
 
 | Concern | Who handles it |
 |---|---|
+| Turn the ASHA's voice into text (Telugu / Hindi / English) | **Whisper speech AI** (`/api/transcribe`) |
 | Understand spoken language and fill the record | **LLM** (`/api/extract`) |
 | Map symptoms to a fixed vocabulary | **LLM**, guided by the system prompt + controlled vocab in `src/rules/vocabulary.ts` |
 | Decide whether a symptom is a danger sign | **Deterministic rule engine** (`src/rules/engine.ts`) |
@@ -217,6 +226,7 @@ The script in `eval/run-eval.mjs` runs the **offline rule engine with the LLM sw
 ### Privacy
 - 🔒 **Records stay on the device** (IndexedDB). The app never sends records to a server it doesn't own.
 - 🔒 **Redaction before AI**: `src/ai/redact.ts` replaces names, phone numbers and ID-like numbers with tokens (`[NAME_1]`, `[PHONE_1]`) before any request to `/api/extract` or `/api/message`. The map of tokens to real values **never leaves the browser**. The response is restored locally.
+- 🎙️ **Voice note:** to turn speech into text, the audio recording is sent to the speech provider (Whisper on Groq, or Google when the browser's own voice typing is used). Redaction applies to the text before the language model reads it. In a real deployment this should run on a government-approved or on-device speech model.
 - 🔒 The **API key lives only on the server** (Vercel env vars). It is never bundled into the frontend.
 - 🔒 **No analytics, no tracking, no third-party cookies.**
 - 🔒 **Demo data is 100 % fictional.**
@@ -287,7 +297,8 @@ Redeploy. Done.
 |---|---|---|
 | `LLM_BASE_URL` | OpenAI-compatible chat completions base URL | Server only |
 | `LLM_API_KEY` | API key for the LLM provider | Server only |
-| `LLM_MODEL` | Model name as the provider expects it | Server only |
+| `LLM_MODEL` | Model name as the provider expects it (we use `openai/gpt-oss-120b` on Groq) | Server only |
+| `STT_MODEL` | Optional. Speech-to-text model, default `whisper-large-v3` | Server only |
 
 Never commit your real `.env`. The `.env.example` file has placeholders.
 

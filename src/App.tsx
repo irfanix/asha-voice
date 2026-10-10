@@ -23,6 +23,7 @@ import PersonDetail from './screens/PersonDetail';
 import Ask from './screens/Ask';
 import Report from './screens/Report';
 import Settings from './screens/Settings';
+import Supervisor from './screens/Supervisor';
 
 import { getSettings } from './db';
 import type { AppLanguage } from './i18n';
@@ -94,6 +95,7 @@ export default function App() {
         <Route path="/ask" element={<Ask />} />
         <Route path="/report" element={<Report />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/supervisor" element={<Supervisor />} />
 
         {/* Redirect unknown paths to Home, keeping query string only for record. */}
         <Route

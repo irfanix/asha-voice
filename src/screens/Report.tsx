@@ -18,6 +18,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import {
   all,
@@ -278,6 +279,13 @@ export default function Report() {
           your state and may differ.
         </p>
       </section>
+
+      <Link
+        to="/supervisor"
+        className="block w-full py-3 rounded-2xl border-2 border-primary text-primary text-center font-semibold text-sm"
+      >
+        🧑‍⚕️ {t('sup_open')}
+      </Link>
 
       {/* Export buttons */}
       <div className="grid grid-cols-2 gap-2">

@@ -85,9 +85,15 @@ export default function Ask() {
   );
 
   // -------------------- Speech input --------------------
-  const handleTranscript = (chunk: string, final: boolean) => {
-    if (!final) return;
-    setQuestion((prev) => (prev ? prev + ' ' : '') + chunk.trim());
+  // MicButton sends the full text heard since the mic was switched on;
+  // keep anything already typed in front of it.
+  const askBaseRef = useRef('');
+  const handleMicStart = () => {
+    askBaseRef.current = question.trim();
+  };
+  const handleTranscript = (heard: string) => {
+    const base = askBaseRef.current;
+    setQuestion(base && heard ? `${base} ${heard}` : base || heard);
   };
 
   // -------------------- Speech output --------------------
@@ -224,6 +230,7 @@ export default function Ask() {
           <MicButton
             lang={speechLocale}
             onTranscript={handleTranscript}
+            onStart={handleMicStart}
             disabled={busy}
           />
 

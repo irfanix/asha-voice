@@ -15,8 +15,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import PersonForm from '../components/PersonForm';
 import {
   all,
+  put,
   type Person,
   type Visit,
   type Referral,
@@ -35,6 +37,7 @@ export default function People() {
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -159,6 +162,33 @@ export default function People() {
           {shown.length} / {persons.length}
         </span>
       </header>
+
+      {/* Add a new person (name, DOB, phone, address, G P A for pregnant women) */}
+      <button
+        type="button"
+        onClick={() => setAdding((v) => !v)}
+        className="w-full py-3 rounded-2xl bg-primary text-white font-semibold active:scale-95 transition-transform"
+      >
+        ➕ {t('add_person')}
+      </button>
+      {adding && (
+        <PersonForm
+          defaultCategory="pregnant"
+          onCancel={() => setAdding(false)}
+          onSave={async (np) => {
+            await put('persons', np);
+            setAdding(false);
+            await load();
+          }}
+        />
+      )}
+
+      <Link
+        to="/supervisor"
+        className="block w-full py-3 rounded-2xl border-2 border-primary text-primary text-center font-semibold text-sm"
+      >
+        🧑‍⚕️ {t('sup_open')}
+      </Link>
 
       {/* Search */}
       <div className="relative">
