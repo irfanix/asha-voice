@@ -6,7 +6,7 @@ Built for **ForgeHacks Online 2026**, track: **AI + Healthcare**.
 
 **Live demo:** https://asha-voice-phi.vercel.app
 
-> ⚠️ **ASHA Voice is a prototype. It is not a medical device.** The AI never diagnoses and never prescribes. Danger signs come from a deterministic rule engine based on official Indian guidance. The ASHA always reviews and confirms before saving.
+> **ASHA Voice is a prototype. It is not a medical device.** The AI never diagnoses and never prescribes. Danger signs come from a deterministic rule engine based on official Indian guidance. The ASHA always reviews and confirms before saving.
 
 ---
 
@@ -43,13 +43,13 @@ Built for **ForgeHacks Online 2026**, track: **AI + Healthcare**.
 
 | Step | What happens |
 |---|---|
-| 🎤 **Speak** | The ASHA taps the mic and describes the visit in her own language. |
-| 🧠 **Extract** | A serverless LLM call turns her words into a structured record (BP, symptoms, services). Names and phone numbers are redacted before the call. |
-| 🚨 **Flag** | A deterministic **rule engine** runs in the browser and flags RED / AMBER / GREEN danger signs with plain-language reasons and official sources. This works **offline**, without the LLM. |
-| 📅 **Plan** | The visit planner tells her who to visit next and **why** ("Day 7 newborn visit due", "Referred 3 days ago, not yet seen at PHC"). |
-| 💬 **Message** | A short, warm family message is generated in the family's language and can be **played aloud** for families who cannot read. |
-| 🤖 **Ask** | "Ask ASHA Didi" answers guideline questions from a curated knowledge base, always with sources, and politely refuses dose / medicine questions. |
-| 📊 **Report** | One-tap monthly summary with visits, danger signs, referrals and an incentive tracker (example values, clearly labelled). |
+| **Speak** | The ASHA taps the mic and describes the visit in her own language. |
+| **Extract** | A serverless LLM call turns her words into a structured record (BP, symptoms, services). Names and phone numbers are redacted before the call. |
+| **Flag** | A deterministic **rule engine** runs in the browser and flags RED / AMBER / GREEN danger signs with plain-language reasons and official sources. This works **offline**, without the LLM. |
+| **Plan** | The visit planner tells her who to visit next and **why** ("Day 7 newborn visit due", "Referred 3 days ago, not yet seen at PHC"). |
+| **Message** | A short, warm family message is generated in the family's language and can be **played aloud** for families who cannot read. |
+| **Ask** | "Ask ASHA Didi" answers guideline questions from a curated knowledge base, always with sources, and politely refuses dose / medicine questions. |
+| **Report** | One-tap monthly summary with visits, danger signs, referrals and an incentive tracker (example values, clearly labelled). |
 
 ---
 
@@ -255,7 +255,7 @@ npm run dev
 # → http://localhost:5173
 ```
 
-> ⚠️ **In `npm run dev`, the `/api/*` routes do not run.** Vite serves the frontend only. To test the AI endpoints locally, use `vercel dev` (see below) or deploy to Vercel.
+> **In `npm run dev`, the `/api/*` routes do not run.** Vite serves the frontend only. To test the AI endpoints locally, use `vercel dev` (see below) or deploy to Vercel.
 
 ```bash
 # Full local stack, including serverless functions:
