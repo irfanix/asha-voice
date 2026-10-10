@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 import BottomNav from './BottomNav';
 import OfflineBadge from './OfflineBadge';
+import Icon from './Icon';
 
 export default function Layout() {
   const { t } = useTranslation();
@@ -65,7 +66,7 @@ export default function Layout() {
             className={[
               'fixed z-30',
               'h-16 w-16 rounded-full shadow-xl',
-              'bg-primary text-white text-3xl',
+              'bg-gradient-to-br from-primary to-teal-800 text-white ring-4 ring-white',
               'flex items-center justify-center',
               'active:scale-95',
               pressed ? 'scale-95' : 'scale-100',
@@ -78,7 +79,7 @@ export default function Layout() {
               bottom: 'calc(4.5rem + env(safe-area-inset-bottom))',
             }}
           >
-            <span aria-hidden="true">🎤</span>
+            <Icon name="mic" size={30} strokeWidth={2.2} />
           </button>
         )}
       </div>

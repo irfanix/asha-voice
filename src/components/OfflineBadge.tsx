@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { drainQueue, queueSize } from '../ai/client';
 import { getSettings } from '../db';
+import Icon from './Icon';
 
 export default function OfflineBadge() {
   const { t } = useTranslation();
@@ -96,7 +97,10 @@ export default function OfflineBadge() {
     <div className="bg-white border-b px-4 py-1.5 flex items-center justify-between gap-2 text-xs">
       {/* Left: online / offline status */}
       <span className={online ? 'text-safe font-medium' : 'text-watch font-medium'}>
-        {online ? '🟢 ' + t('online') : '🟠 ' + t('offline')}
+        <span className="inline-flex items-center gap-1">
+          <Icon name={online ? 'wifi' : 'wifiOff'} size={14} />
+          {online ? t('online') : t('offline')}
+        </span>
       </span>
 
       {/* Middle: queued AI tasks */}
@@ -112,10 +116,15 @@ export default function OfflineBadge() {
 
       {/* Right: ASHA's name + privacy lock */}
       <span className="flex items-center gap-1 min-w-0 text-gray-700 font-medium">
-        <span title={t('privacy_badge')} aria-label={t('privacy_badge')}>
-          🔒
+        <span title={t('privacy_badge')} aria-label={t('privacy_badge')} className="text-gray-400">
+          <Icon name="lock" size={13} />
         </span>
-        <span className="truncate max-w-[160px]">👤 {ashaName || 'ASHA'}</span>
+        <span className="inline-flex items-center gap-1.5 truncate max-w-[170px] bg-primary/10 text-primary rounded-full pl-1 pr-2.5 py-0.5">
+          <span className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center">
+            <Icon name="user" size={12} strokeWidth={2.5} />
+          </span>
+          <span className="truncate">{ashaName || 'ASHA'}</span>
+        </span>
       </span>
     </div>
   );

@@ -26,6 +26,7 @@ import { extractVisit } from '../ai/client';
 import { DEMO_TRANSCRIPTS } from '../demo/demoTranscripts';
 import { SPEECH_LOCALE, type AppLanguage } from '../i18n';
 import { VISIT_TYPE_LABELS, type VisitType } from '../rules/vocabulary';
+import Icon from '../components/Icon';
 
 // Map the planner's action to a visit type.
 function actionToVisitType(action: string | null): VisitType {
@@ -171,7 +172,7 @@ export default function RecordVisit() {
     <div className="space-y-5 pb-24">
       <header>
         <h1 className="text-2xl font-bold text-gray-900">
-          🎤 {t('record_visit')}
+          <span className="inline-flex items-center gap-2"><Icon name="mic" size={26} className="text-primary" /> {t('record_visit')}</span>
         </h1>
       </header>
 

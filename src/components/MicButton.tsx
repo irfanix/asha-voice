@@ -29,6 +29,7 @@
 // ------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from 'react';
+import Icon from './Icon';
 
 export type MicErrorReason = 'unsupported' | 'denied' | 'network' | 'language' | 'other' | 'cleared' | 'ai_failed';
 export type MicStatus = 'idle' | 'recording' | 'transcribing';
@@ -321,7 +322,7 @@ export default function MicButton({ lang, onTranscript, onStart, onListeningChan
         'relative h-24 w-24 shrink-0 rounded-full text-white text-4xl',
         'flex items-center justify-center shadow-lg',
         'transition-colors duration-200 select-none',
-        listening ? 'bg-danger' : 'bg-primary',
+        listening ? 'bg-danger' : 'bg-gradient-to-br from-primary to-teal-800',
         disabled || !supported || transcribing ? 'opacity-50 cursor-not-allowed' : 'active:scale-95',
       ].join(' ')}
     >
@@ -329,7 +330,7 @@ export default function MicButton({ lang, onTranscript, onStart, onListeningChan
         <span aria-hidden="true" className="absolute inset-0 rounded-full bg-danger/40 animate-ping" />
       )}
       <span aria-hidden="true" className="relative z-10">
-        {transcribing ? '⏳' : listening ? '⏹' : '🎤'}
+        <Icon name={transcribing ? 'loader' : listening ? 'stop' : 'mic'} size={40} strokeWidth={2.2} />
       </span>
     </button>
   );

@@ -24,6 +24,7 @@ import {
   type Referral,
 } from '../db';
 import { daysBetween, fromIsoDate } from '../planner/schedules';
+import Icon from '../components/Icon';
 
 type Filter = 'all' | 'pregnant' | 'newborn' | 'child' | 'overdue';
 
@@ -169,7 +170,9 @@ export default function People() {
         onClick={() => setAdding((v) => !v)}
         className="w-full py-3 rounded-2xl bg-primary text-white font-semibold active:scale-95 transition-transform"
       >
-        ➕ {t('add_person')}
+        <span className="inline-flex items-center justify-center gap-2">
+          <Icon name="userPlus" size={20} /> {t('add_person')}
+        </span>
       </button>
       {adding && (
         <PersonForm
@@ -187,7 +190,9 @@ export default function People() {
         to="/supervisor"
         className="block w-full py-3 rounded-2xl border-2 border-primary text-primary text-center font-semibold text-sm"
       >
-        🧑‍⚕️ {t('sup_open')}
+        <span className="inline-flex items-center justify-center gap-2">
+          <Icon name="shield" size={18} /> {t('sup_open')}
+        </span>
       </Link>
 
       {/* Search */}

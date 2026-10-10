@@ -31,6 +31,7 @@ import {
 import { buildPlan, type PlanItem } from '../planner/planner';
 import { daysBetween, fromIsoDate } from '../planner/schedules';
 import { ageInYears, gpaText } from '../components/PersonForm';
+import Icon from '../components/Icon';
 
 // Indian mobile numbers: add the 91 country code for WhatsApp links.
 function waNumber(phone?: string): string | null {
@@ -219,7 +220,9 @@ export default function Supervisor() {
   return (
     <div className="space-y-4 pb-24">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900">🧑‍⚕️ {t('supervisor')}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 inline-flex items-center gap-2">
+          <Icon name="shield" size={26} className="text-primary" /> {t('supervisor')}
+        </h1>
         <p className="text-xs text-gray-500 mt-1">{t('sup_note')}</p>
       </header>
 
@@ -245,21 +248,21 @@ export default function Supervisor() {
           onClick={exportAll}
           className="py-3 rounded-2xl bg-primary text-white font-semibold text-sm active:scale-95 transition-transform"
         >
-          ⬇️ {t('sup_export_all')}
+          <span className="inline-flex items-center justify-center gap-2"><Icon name="download" size={18} /> {t('sup_export_all')}</span>
         </button>
         <button
           type="button"
           onClick={shareSummary}
           className="py-3 rounded-2xl border-2 border-primary text-primary font-semibold text-sm active:scale-95 transition-transform"
         >
-          💬 {t('sup_share')}
+          <span className="inline-flex items-center justify-center gap-2"><Icon name="send" size={18} /> {t('sup_share')}</span>
         </button>
       </section>
 
       {/* Needs action */}
       <section className="bg-white rounded-2xl p-4 shadow-sm">
         <h2 className="font-bold text-gray-900 mb-2">
-          🚨 {t('sup_needs_action')} ({needsAction.length})
+          <span className="inline-flex items-center gap-2"><Icon name="alert" size={20} className="text-danger" /> {t('sup_needs_action')} ({needsAction.length})</span>
         </h2>
         {needsAction.length === 0 ? (
           <p className="text-sm text-gray-500">{t('sup_nothing')}</p>
@@ -290,7 +293,11 @@ export default function Supervisor() {
                     disabled={!hasPhone}
                     className="shrink-0 px-3 py-2 rounded-xl text-xs font-semibold bg-safe text-white disabled:bg-gray-200 disabled:text-gray-500"
                   >
-                    {hasPhone ? `📲 ${t('sup_remind')}` : t('sup_no_phone')}
+                    {hasPhone ? (
+                      <span className="inline-flex items-center gap-1"><Icon name="bell" size={14} /> {t('sup_remind')}</span>
+                    ) : (
+                      t('sup_no_phone')
+                    )}
                   </button>
                 </li>
               );
@@ -302,7 +309,7 @@ export default function Supervisor() {
       {/* Full register */}
       <section>
         <h2 className="font-bold text-gray-900 mb-2">
-          📒 {t('sup_register')} ({persons.length})
+          <span className="inline-flex items-center gap-2"><Icon name="clipboard" size={20} className="text-primary" /> {t('sup_register')} ({persons.length})</span>
         </h2>
         <ul className="space-y-2">
           {persons.map((p) => {
@@ -329,13 +336,15 @@ export default function Supervisor() {
                 </p>
                 <p className="text-xs text-gray-600">
                   {p.phone ? (
-                    <a href={`tel:${p.phone}`} className="text-primary underline">
-                      📞 {p.phone}
+                    <a href={`tel:${p.phone}`} className="text-primary underline inline-flex items-center gap-1">
+                      <Icon name="phone" size={12} /> {p.phone}
                     </a>
                   ) : (
-                    `📞 ${t('sup_no_phone')}`
+                    <span className="inline-flex items-center gap-1"><Icon name="phone" size={12} /> {t('sup_no_phone')}</span>
                   )}
-                  {p.address ? ` · 🏠 ${p.address}` : ''}
+                  {p.address ? (
+                    <span className="inline-flex items-center gap-1 ml-2"><Icon name="pin" size={12} /> {p.address}</span>
+                  ) : null}
                 </p>
                 <p className="text-[11px] text-gray-400 mt-0.5">
                   {t('sup_last_visit')}: {lv ? `${lv.date} (${lv.type})` : t('sup_no_visit')}

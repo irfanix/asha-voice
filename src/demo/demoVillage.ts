@@ -30,31 +30,47 @@ type SeedPerson = {
   ageDays?: number; // for newborn
   ageMonths?: number; // for child / mother
   birthWeightG?: number;
+  ageYears?: number; // for adults: gives a date of birth
+  phone?: string; // fictional numbers only
+  address?: string;
+  gpa?: [number, number, number]; // gravida, para, abortus
 };
 
 const SEED_PERSONS: SeedPerson[] = [
   // ---------- Pregnant ----------
   // Lakshmi has pre-eclampsia symptoms -> planner shows her first,
   // and the demo transcript produces a RED alert on her visit.
-  { seedId: 'P_lakshmi', hh: 'H1', name: 'Lakshmi Devi', category: 'pregnant', weeksPregnant: 32 },
-  { seedId: 'P_sita', hh: 'H2', name: 'Sita Kumari', category: 'pregnant', weeksPregnant: 24 },
-  { seedId: 'P_anitha', hh: 'H3', name: 'Anitha', category: 'pregnant', weeksPregnant: 12 },
+  { seedId: 'P_lakshmi', hh: 'H1', name: 'Lakshmi Devi', category: 'pregnant', weeksPregnant: 32, ageYears: 24,
+    phone: '9000000101', address: 'House 1-24, Ward 1, near Hanuman temple, Rampur', gpa: [2, 1, 0] },
+  { seedId: 'P_sita', hh: 'H2', name: 'Sita Kumari', category: 'pregnant', weeksPregnant: 24, ageYears: 21,
+    phone: '9000000102', address: 'House 2-07, Ward 2, school road, Rampur', gpa: [1, 0, 0] },
+  { seedId: 'P_anitha', hh: 'H3', name: 'Anitha', category: 'pregnant', weeksPregnant: 12, ageYears: 29,
+    phone: '9000000103', address: 'House 3-15, Ward 2, beside water tank, Rampur', gpa: [3, 1, 1] },
 
   // ---------- Newborns ----------
   // Baby of Lakshmi is exactly 7 days old -> HBNC day 7 due today.
-  { seedId: 'N_lakshmi', hh: 'H1', name: 'Baby of Lakshmi', category: 'newborn', ageDays: 7, birthWeightG: 2900 },
-  { seedId: 'N_sita', hh: 'H2', name: 'Baby of Sita', category: 'newborn', ageDays: 20, birthWeightG: 2600 },
+  { seedId: 'N_lakshmi', hh: 'H1', name: 'Baby of Lakshmi', category: 'newborn', ageDays: 7, birthWeightG: 2900,
+    phone: '9000000101', address: 'House 1-24, Ward 1, near Hanuman temple, Rampur' },
+  { seedId: 'N_sita', hh: 'H2', name: 'Baby of Sita', category: 'newborn', ageDays: 20, birthWeightG: 2600,
+    phone: '9000000102', address: 'House 2-07, Ward 2, school road, Rampur' },
 
   // ---------- Children ----------
-  { seedId: 'C_ravi', hh: 'H4', name: 'Ravi', category: 'child', ageMonths: 9 },
-  { seedId: 'C_priya', hh: 'H4', name: 'Priya', category: 'child', ageMonths: 18 },
-  { seedId: 'C_kiran', hh: 'H5', name: 'Kiran', category: 'child', ageMonths: 30 },
-  { seedId: 'C_manoj', hh: 'H5', name: 'Manoj', category: 'child', ageMonths: 48 },
+  { seedId: 'C_ravi', hh: 'H4', name: 'Ravi', category: 'child', ageMonths: 9,
+    phone: '9000000104', address: 'House 4-03, Ward 3, market street, Rampur' },
+  { seedId: 'C_priya', hh: 'H4', name: 'Priya', category: 'child', ageMonths: 18,
+    phone: '9000000104', address: 'House 4-03, Ward 3, market street, Rampur' },
+  { seedId: 'C_kiran', hh: 'H5', name: 'Kiran', category: 'child', ageMonths: 30,
+    phone: '9000000105', address: 'House 5-11, Ward 3, panchayat office lane, Rampur' },
+  { seedId: 'C_manoj', hh: 'H5', name: 'Manoj', category: 'child', ageMonths: 48,
+    phone: '9000000105', address: 'House 5-11, Ward 3, panchayat office lane, Rampur' },
 
   // ---------- Postnatal mother + other adults ----------
-  { seedId: 'M_padma', hh: 'H6', name: 'Padma', category: 'mother', ageMonths: 3 },
-  { seedId: 'O_raju', hh: 'H6', name: 'Raju', category: 'other', ageMonths: 40 },
-  { seedId: 'O_saroja', hh: 'H7', name: 'Saroja', category: 'other', ageMonths: 60 },
+  { seedId: 'M_padma', hh: 'H6', name: 'Padma', category: 'mother', ageMonths: 3, ageYears: 26,
+    phone: '9000000106', address: 'House 6-02, Ward 4, canal road, Rampur', gpa: [2, 2, 0] },
+  { seedId: 'O_raju', hh: 'H6', name: 'Raju', category: 'other', ageYears: 40,
+    phone: '9000000107', address: 'House 6-02, Ward 4, canal road, Rampur' },
+  { seedId: 'O_saroja', hh: 'H7', name: 'Saroja', category: 'other', ageYears: 60,
+    phone: '9000000108', address: 'House 7-19, Ward 4, near ration shop, Rampur' },
 ];
 
 // Convert "weeks ago" / "days ago" / "months ago" to ISO yyyy-mm-dd.
@@ -70,9 +86,24 @@ function buildPerson(seed: SeedPerson): Person {
     id,
     household_id: seed.hh,
     name: seed.name,
-    sex: seed.name.startsWith('Baby') ? 'F' : 'F',
+    sex: ['Raju', 'Ravi', 'Kiran', 'Manoj'].includes(seed.name) ? 'M' : 'F',
     category: seed.category,
+    phone: seed.phone,
+    address: seed.address,
   };
+
+  // Adults: date of birth from age in years (fictional).
+  if (seed.ageYears != null) {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - seed.ageYears);
+    d.setMonth(2, 15);
+    base.dob = d.toISOString().slice(0, 10);
+  }
+
+  // Obstetric history G P A for pregnant women and mothers.
+  if (seed.gpa) {
+    [base.gravida, base.para, base.abortus] = seed.gpa;
+  }
 
   if (seed.category === 'pregnant' && seed.weeksPregnant != null) {
     const lmpDate = new Date();

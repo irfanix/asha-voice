@@ -13,20 +13,21 @@
 
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Icon, { type IconName } from './Icon';
 
 type NavItem = {
   to: string;
-  icon: string;
+  icon: IconName;
   labelKey: string;
   end?: boolean;
 };
 
 const ITEMS: NavItem[] = [
-  { to: '/', icon: '🏠', labelKey: 'today_plan', end: true },
-  { to: '/people', icon: '👥', labelKey: 'people' },
-  { to: '/ask', icon: '💬', labelKey: 'ask' },
-  { to: '/report', icon: '📊', labelKey: 'report' },
-  { to: '/settings', icon: '⚙️', labelKey: 'settings' },
+  { to: '/', icon: 'home', labelKey: 'today_plan', end: true },
+  { to: '/people', icon: 'users', labelKey: 'people' },
+  { to: '/ask', icon: 'chat', labelKey: 'ask' },
+  { to: '/report', icon: 'chart', labelKey: 'report' },
+  { to: '/settings', icon: 'settings', labelKey: 'settings' },
 ];
 
 export default function BottomNav() {
@@ -57,13 +58,13 @@ export default function BottomNav() {
               {({ isActive }) => (
                 <>
                   <span
-                    className={
-                      'text-2xl leading-none ' +
-                      (isActive ? 'scale-110 transition-transform' : '')
-                    }
+                    className={[
+                      'flex items-center justify-center h-8 w-12 rounded-full transition-all',
+                      isActive ? 'bg-primary/10' : '',
+                    ].join(' ')}
                     aria-hidden="true"
                   >
-                    {item.icon}
+                    <Icon name={item.icon} size={22} strokeWidth={isActive ? 2.4 : 1.9} />
                   </span>
                   <span className="text-[11px] mt-0.5 leading-tight text-center px-1">
                     {t(item.labelKey)}

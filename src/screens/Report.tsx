@@ -26,6 +26,7 @@ import {
   type Referral,
   type Immunisation,
 } from '../db';
+import Icon from '../components/Icon';
 
 type MonthStats = {
   visits: number;
@@ -284,7 +285,9 @@ export default function Report() {
         to="/supervisor"
         className="block w-full py-3 rounded-2xl border-2 border-primary text-primary text-center font-semibold text-sm"
       >
-        🧑‍⚕️ {t('sup_open')}
+        <span className="inline-flex items-center justify-center gap-2">
+          <Icon name="shield" size={18} /> {t('sup_open')}
+        </span>
       </Link>
 
       {/* Export buttons */}

@@ -31,6 +31,7 @@ import {
 import { daysBetween, fromIsoDate } from '../planner/schedules';
 import { SPEECH_LOCALE, type AppLanguage } from '../i18n';
 import type { Lang } from '../rules/dangerSigns';
+import Icon from '../components/Icon';
 
 export default function PersonDetail() {
   const { t, i18n } = useTranslation();
@@ -271,13 +272,15 @@ export default function PersonDetail() {
       {/* Personal details */}
       <section className="bg-white rounded-2xl p-4 shadow-sm">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="font-bold text-gray-900">🪪 {t('details')}</h2>
+          <h2 className="font-bold text-gray-900 inline-flex items-center gap-2">
+            <Icon name="idCard" size={20} className="text-primary" /> {t('details')}
+          </h2>
           <button
             type="button"
             onClick={() => setEditing((v) => !v)}
             className="text-sm text-primary font-medium"
           >
-            ✏️ {t('edit')}
+            <span className="inline-flex items-center gap-1"><Icon name="edit" size={15} /> {t('edit')}</span>
           </button>
         </div>
         {editing ? (
@@ -325,7 +328,7 @@ export default function PersonDetail() {
                      flex items-center justify-center gap-2
                      active:scale-95 transition-transform"
         >
-          🎤 {t('record_visit')}
+          <Icon name="mic" size={20} /> {t('record_visit')}
         </button>
         <button
           type="button"
