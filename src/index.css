@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/*  Global styles for ASHA Voice                                       */
+/*  - large base font for low-literacy users                           */
+/*  - calm, high-contrast background                                    */
+/*  - respects prefers-reduced-motion                                   */
+/* ------------------------------------------------------------------ */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: #f6f7f5;
+  color: #111827;
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Big, thumb-friendly focus ring (accessibility) */
+*:focus-visible {
+  outline: 3px solid #0f766e;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* All interactive elements should be at least 48 px tall */
+button,
+a,
+select,
+input[type='text'],
+input[type='number'],
+textarea {
+  min-height: 48px;
+}
+
+/* Remove number input arrows for cleaner mobile UI */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles for the monthly report */
+@media print {
+  body {
+    background: white;
+  }
+  nav,
+  button {
+    display: none !important;
+  }
+}

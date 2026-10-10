@@ -1,0 +1,182 @@
+[
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "Lakshmi, 32 weeks pregnant. Severe headache and blurred vision since yesterday, hands and face are swollen. BP 150 over 100.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "Lakshmi, 32 weeks pregnant. Severe headache and blurred vision since yesterday.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "BP 150 over 100 today.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "She has some bleeding since morning.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "Hands and face are swollen but no headache, no blurred vision.",
+    "expected_level": "amber"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "Sita, 24 weeks pregnant. Eating well, BP 110 over 70, weight 55. No complaints.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "en",
+    "visit_type": "anc",
+    "text": "Twenty weeks pregnant. Feeling well, no danger signs.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "en",
+    "visit_type": "newborn",
+    "text": "7 day old baby is not feeding well and has fast breathing.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "newborn",
+    "text": "Baby has yellow palms and soles today.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "newborn",
+    "text": "Newborn is breathing 65 times per minute and chest is indrawing.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "newborn",
+    "text": "20 day old baby feeding well, temperature 36.8, cord clean and dry.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "en",
+    "visit_type": "postnatal",
+    "text": "Mother has heavy bleeding since delivery, fever and foul smelling discharge.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "postnatal",
+    "text": "Breast pain and redness for two days.",
+    "expected_level": "amber"
+  },
+  {
+    "lang": "en",
+    "visit_type": "postnatal",
+    "text": "Mother is recovering well after delivery, no complaints.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "en",
+    "visit_type": "child",
+    "text": "Ravi is nine months old. Vomiting everything since yesterday and cannot drink. Eyes look sunken and he is very lethargic.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "child",
+    "text": "Child has convulsions since morning.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "en",
+    "visit_type": "child",
+    "text": "Child is playful, eating well, no danger signs.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "anc",
+    "text": "लक्ष्मी 32 सप्ताह की गर्भवती है। कल से तेज़ सिरदर्द और धुंधली दृष्टि है। बीपी 150/100।",
+    "expected_level": "red"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "anc",
+    "text": "मरीज़ को खून आ रहा है।",
+    "expected_level": "red"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "anc",
+    "text": "सीता, 24 सप्ताह गर्भवती। ठीक है, BP 110/70, वजन 55।",
+    "expected_level": "green"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "newborn",
+    "text": "सात दिन का बच्चा ठीक से दूध नहीं पी रहा और तेज़ सांस ले रहा है।",
+    "expected_level": "red"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "newborn",
+    "text": "बच्चा ठीक से दूध पी रहा है, कोई तकलीफ नहीं।",
+    "expected_level": "green"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "child",
+    "text": "रवि को कल से उल्टी हो रही है, कुछ खा-पी नहीं सकता, आँखें धँसी हैं।",
+    "expected_level": "red"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "postnatal",
+    "text": "पद्मा को तीन दिन से हल्का बुखार है और स्तन में दर्द है।",
+    "expected_level": "red"
+  },
+  {
+    "lang": "hi",
+    "visit_type": "postnatal",
+    "text": "माँ ठीक है, कोई तकलीफ नहीं।",
+    "expected_level": "green"
+  },
+  {
+    "lang": "te",
+    "visit_type": "anc",
+    "text": "లక్ష్మి, 32 వారాలు. తలనొప్పి, మసక చూపు, చేతులు వాచాయి. బీపీ 150/100.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "te",
+    "visit_type": "anc",
+    "text": "రక్తస్రావం జరుగుతోంది.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "te",
+    "visit_type": "anc",
+    "text": "సీత, 24 వారాలు. బాగా తింటోంది, బీపీ 110/70, బరువు 55.",
+    "expected_level": "green"
+  },
+  {
+    "lang": "te",
+    "visit_type": "newborn",
+    "text": "ఏడు రోజుల పాప పాలు తాగడం లేదు, వేగంగా శ్వాస.",
+    "expected_level": "red"
+  },
+  {
+    "lang": "te",
+    "visit_type": "newborn",
+    "text": "పాప బాగా పాలు తాగుతోంది, ఎటువంటి ఇబ్బంది లేదు.",
+    "expected_level": "green"
+  }
+]
